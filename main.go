@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/bgadrian/hot-cache-crawler/src/scanner"
+	"github.com/bgadrian/warmcache/scanner"
 	"github.com/mkideal/cli"
 )
 
