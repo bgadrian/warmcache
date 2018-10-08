@@ -1,16 +1,17 @@
 package scanner
 
 import (
+	"bytes"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/PuerkitoBio/gocrawl"
-	"github.com/labstack/gommon/log"
 )
 
 var fetchCount int
-var customParams url.Values
+var customParams []url.Values
 var customHeaders []string
 
 //CustomCrawler of https://github.com/PuerkitoBio/gocrawl
@@ -21,9 +22,11 @@ type CustomCrawler struct {
 //Fetch overrides the default implementation in order to add custom parameters and headers
 func (x *CustomCrawler) Fetch(ctx *gocrawl.URLContext, userAgent string, headRequest bool) (*http.Response, error) {
 	urlQueryValues := ctx.URL().Query()
-	for key, values := range customParams {
-		for _, val := range values {
-			urlQueryValues.Add(key, val)
+	for _, queries := range customParams {
+		for key, values := range queries {
+			for _, val := range values {
+				urlQueryValues.Add(key, val)
+			}
 		}
 	}
 
@@ -38,8 +41,6 @@ func (x *CustomCrawler) Fetch(ctx *gocrawl.URLContext, userAgent string, headReq
 	}
 
 	fetchCount++
-
-	x.Log(gocrawl.LogEnqueued, gocrawl.LogInfo, "Override:"+newURL.String())
 
 	//we copied the original Fetch() so we can change the URL (it's immutable) to add the query params
 	var reqType string
@@ -64,5 +65,15 @@ func (x *CustomCrawler) Fetch(ctx *gocrawl.URLContext, userAgent string, headReq
 		req.Header.Set(header[0], header[1])
 	}
 
-	return gocrawl.HttpClient.Do(req)
+	response, reqError := gocrawl.HttpClient.Do(req)
+
+	//TODO optimize this, Log only if --debug is
+	if ctx.IsRobotsURL() == false {
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(response.Body)
+		newStr := buf.String()
+		x.Log(gocrawl.LogAll, gocrawl.LogTrace, newStr)
+	}
+
+	return response, reqError
 }
