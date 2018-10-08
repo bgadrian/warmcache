@@ -13,6 +13,11 @@ build: pre
 	@echo "See ./build/warmcache --help"
 
 buildall: pre
-	GOOS=darwin GOARCH=amd64 go build -o ./build/warmcache-mac $(source)
-	GOOS=linux GOARCH=amd64 go build -o ./build/warmcache $(source)
-	GOOS=windows GOARCH=amd64 go build -o  ./build/warmcache.exe $(source)
+	mkdir -p ./build/warmcache/windows
+	mkdir -p ./build/warmcache/linux
+	mkdir -p ./build/warmcache/macos
+	GOOS=darwin GOARCH=amd64 go build -o ./build/warmcache/macos/warmcache $(source)
+	GOOS=linux GOARCH=amd64 go build -o ./build/warmcache/linux/warmcache $(source)
+	GOOS=windows GOARCH=amd64 go build -o  ./build/warmcache/windows/warmcache.exe $(source)
+	cd ./build && tar -czf ./warmcache.tar.gz ./warmcache/
+	@echo "publish to gihub: $ hub release create -a ./build/warmcache.tar.gz -m 'v0.X' v0.X"
