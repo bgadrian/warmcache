@@ -77,12 +77,12 @@ $ ./build/warmcache -help
 ```
 Crawl trigger for Prerender:
 ```bash 
-$ ./build/warmcache --seed http://localhost/ --debug --query "_escaped_fragment_="```
+$ ./build/warmcache --seed https://domain --debug --query "_escaped_fragment_="
 ````
 Simple crawl of 2 domains, with a maximum of 400 visited pages:
 
 ```bash
-$ ./build/warmcache --seed http://domain1 --seed https://domain2 --max 400
+$ ./build/warmcache --seed https://domain1 --seed https://domain2 --max 400
 ```
 Custom delay time and user-agent:
 ```bash
@@ -102,6 +102,7 @@ You should see in the output the httpbin echo with all the parameters and custom
 
 ## Libraries
 To collect the CLI parameters: https://github.com/mkideal/cli
+
 To crawl the websites I used: https://github.com/PuerkitoBio/gocrawl that obey to robots.txt rules (using the robotstxt.go library) and launches 1 goroutine for each domain.
 
 ## TODO
