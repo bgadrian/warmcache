@@ -1,4 +1,4 @@
-# Hot Cache Crawler
+# WarmCache [Crawler]
 
 Problem: **you have a lazy-init web cache system** (like a CDN or Prerender, or an internal redis/memcache), in result the first visit for each page will have a big latency.
 
@@ -43,20 +43,26 @@ The crawler is caching-agnostic, because it has a simple logic and just visits t
 ## Install & build 
 
 ##### A. Easy way: 
-Download the prebuilt binaries and use them.
+Download the [prebuilt binaries](https://github.com/bgadrian/warmcache/releases) and use them.
+
+##### B. Go way 
+```bash
+$ go install github.com/bgadrian/warmcache
+warmcache --help
+```
 
 ##### B. Hard way: 
 Clone the repo and build it yourself. Requires: go 1.11+, makefile, bash. 
 > It uses Go modules so you can clone the project in any folder you want, it does not required to be in GOPATH/src
 ```bash
-$ git clone git@github.com:bgadrian/hot-cache-crawler.git
-$ cd hot-cache-crawler
+$ git clone git@github.com:bgadrian/warmcache.git
+$ cd warmcache
 $ make build
 ```
 
 ## Usage
 ```bash
-$ ./build/hotcache -help
+$ ./build/warmcache -help
 #output:
 -h, --help                           display help information
       --seed                         *The start page (seed) of the crawl, example: https://google.com
@@ -66,21 +72,21 @@ $ ./build/hotcache -help
       --agent[=Mozilla/5.0 ...]      User-agent for all requests
       --debug                        Print all pages that are found
       --query                        Add custom query params to all requests
-      --header[=X-hotcache:crawler]  Add one or more HTTP request headers to all requests
+      --header[=X-warmcache:crawler]  Add one or more HTTP request headers to all requests
 
 ```
 Crawl trigger for Prerender:
 ```bash 
-$ ./build/hotcache --seed http://localhost/ --debug --query "_escaped_fragment_="```
+$ ./build/warmcache --seed http://localhost/ --debug --query "_escaped_fragment_="```
 ````
 Simple crawl of 2 domains, with a maximum of 400 visited pages:
 
 ```bash
-$ ./build/hotcache --seed http://domain1 --seed https://domain2 --max 400
+$ ./build/warmcache --seed http://domain1 --seed https://domain2 --max 400
 ```
 Custom delay time and user-agent:
 ```bash
-$ ./build/hotcache --seed https://domain1 --delay 250 --robot "mybot" --agent "Mozilla/5.0 (compatible; MyBot/1.0)" 
+$ ./build/warmcache --seed https://domain1 --delay 250 --robot "mybot" --agent "Mozilla/5.0 (compatible; MyBot/1.0)" 
 ```
 ## Test
 
@@ -90,7 +96,7 @@ $ docker run -p 80:80 kennethreitz/httpbin
 
 #in other terminal:
 $ make build
-./build/hotcache --seed http://localhost/anything --debug --query "test=1" --query "_escaped_fragment_=1" --header "Accept: application/json"
+$ ./build/warmcache --seed http://localhost/anything --debug --query "test=1" --query "_escaped_fragment_=1" --header "Accept: application/json"
 ```
 You should see in the output the httpbin echo with all the parameters and custom headers.
 

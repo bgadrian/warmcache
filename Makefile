@@ -1,18 +1,18 @@
 # Makefile
-source := ./src/main.go
+source := main.go
 
 pre:
 	mkdir -p ./build/
-	env GO111MODULE=on go get -d ./src/
+	env GO111MODULE=on go get -d ./
 
 run: pre
 	go run $(source) --seed $(URL) --debug
 
 build: pre
-	go build -o ./build/hotcache $(source)
-	@echo "See ./build/hotcache --help"
+	go build -o ./build/warmcache $(source)
+	@echo "See ./build/warmcache --help"
 
 buildall: pre
-	GOOS=darwin GOARCH=amd64 go build -o ./build/hotcache-mac $(source)
-	GOOS=linux GOARCH=amd64 go build -o ./build/hotcache $(source)
-	GOOS=windows GOARCH=amd64 go build -o  ./build/hotcache.exe $(source)
+	GOOS=darwin GOARCH=amd64 go build -o ./build/warmcache-mac $(source)
+	GOOS=linux GOARCH=amd64 go build -o ./build/warmcache $(source)
+	GOOS=windows GOARCH=amd64 go build -o  ./build/warmcache.exe $(source)

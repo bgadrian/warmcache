@@ -1,4 +1,4 @@
-module github.com/bgadrian/hot-cache-crawler
+module github.com/bgadrian/warmcache
 
 require (
 	github.com/Bowery/prompt v0.0.0-20180817134258-8a1d5376df1c // indirect
